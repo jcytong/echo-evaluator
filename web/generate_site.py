@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
+import markdown
 
 def load_evaluations(logs_dir):
     """Load all evaluation JSON files from the logs directory"""
@@ -67,6 +68,14 @@ def generate_site(logs_dir, output_dir):
         # Get all dimensions except metadata and overall
         dimensions = {k: v for k, v in data.items() 
                      if k not in ['metadata', 'Overall']}
+        
+        # Convert rationale to HTML
+        for dim in dimensions.values():
+            if 'rationale' in dim:
+                # Replace single \n with double for markdown paragraphs, then convert
+                dim['rationale_html'] = markdown.markdown(dim['rationale'].replace('\n', '\n\n'))
+            else:
+                dim['rationale_html'] = ''
         
         with open(os.path.join(output_dir, eval_data['html_file']), 'w') as f:
             f.write(template.render(

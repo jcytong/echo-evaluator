@@ -44,8 +44,9 @@ def generate_site(logs_dir, output_dir):
     index_data = []
     for eval_data in evaluations:
         data = eval_data['data']
+        company_name = data['metadata'].get('company_name')
         index_data.append({
-            'company_name': data['metadata'].get('company_name', 'Unknown Company'),
+            'company_name': company_name if company_name is not None else 'Unknown Company',
             'date': data['metadata'].get('evaluation_date'),
             'overall_score': data.get('Overall', {}).get('score', 0),
             'link': eval_data['html_file']

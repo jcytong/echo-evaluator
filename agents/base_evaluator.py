@@ -279,27 +279,6 @@ class BaseEvaluator:
         
         {calibration_examples_text}
         
-        Critical Questions to Address:
-        1. Market Validation:
-           - Is there clear evidence that customers will pay for this type of solution?
-           - Are early movers showing strong growth/traction?
-           - What signals validate the market timing?
-        
-        2. Competitive Landscape:
-           - How fragmented is the current market?
-           - Are competitors also young/recently funded?
-           - What barriers exist for established players?
-        
-        3. Growth Signals:
-           - Is the headcount growth indicative of revenue growth or just funding?
-           - Does the hiring pattern suggest product-market fit?
-           - Are there signs of sustainable unit economics?
-        
-        4. Timing Analysis:
-           - Why is now the right time for this solution?
-           - What recent changes enable new approaches?
-           - Is the market mature enough but not too crowded?
-        
         Important Instructions:
         1. Use BOTH company data AND web research to inform your evaluation
         2. Be skeptical - distinguish between genuine signals and funding-driven growth
@@ -320,14 +299,7 @@ class BaseEvaluator:
         {self.rubric}
         
         Provide:
-        1. A detailed analysis that:
-           - Evaluates market validation evidence
-           - Assesses competitive dynamics
-           - Analyzes growth signals
-           - Questions timing assumptions
-           - Identifies potential risks
-           - Lists critical missing information
-           - Explains why a higher score wasn't given
+        1. A 2 minute analysis of the company's potential as a fast follower opportunity for the {self.dimension_name} dimension
         2. After providing the rationale, determine the appropriate score from 0-3 using the rubric.
         """
         

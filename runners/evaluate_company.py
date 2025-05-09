@@ -114,7 +114,7 @@ def run_evaluation(company_data: Dict[str, Any]) -> Dict[str, Any]:
         
         results = {
             "metadata": {
-                "company_name": company_data.get("name"),
+                "company_name": company_data.get("name") or company_data.get("display_name") or "Unknown Company",
                 "evaluation_date": datetime.now().isoformat(),
                 "evaluation_version": "1.0"
             }

@@ -19,7 +19,7 @@ Each dimension returns:
 - Score (0–3)
 - Written rationale
 
-## Dimension  Description / Criteria
+## Dimensions
 | Dimension | Description / Criteria |
 |-----------|------------------------|
 | Founder Edge | Do the founders have insider advantage (domain, access, prior success)? |

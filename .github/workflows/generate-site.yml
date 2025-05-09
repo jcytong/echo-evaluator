@@ -71,6 +71,8 @@ jobs:
           ls -la docs/
           echo "Contents of docs directory:"
           find docs/ -type f
+          echo "Contents of index.html:"
+          cat docs/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

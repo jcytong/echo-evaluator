@@ -6,3 +6,4 @@ serpapi
 google-search-results
 gspread
 python-dotenv
+markdown

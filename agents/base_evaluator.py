@@ -4,6 +4,164 @@ from tools.search_tool import search_tool
 import logging
 import re
 
+# Define calibration examples for each dimension
+CALIBRATION_EXAMPLES = {
+    "Founder Edge": {
+        0: [
+            "Team of recent graduates with no industry experience",
+            "Solo founder from unrelated industry (e.g., restaurant owner starting a SaaS company)",
+            "Consultants with no direct experience in the space"
+        ],
+        1: [
+            "Product manager from adjacent industry",
+            "Technical founder with general experience but no domain expertise",
+            "Former junior employee at competitor"
+        ],
+        2: [
+            "Former VP of Product at target customer company",
+            "Serial founder with success in adjacent space",
+            "Domain expert with 10+ years experience"
+        ],
+        3: [
+            "Repeat founder who sold previous company in same space",
+            "Former CTO of market leader starting competing product",
+            "Founder with unique insight from running target customer company"
+        ]
+    },
+    "Novel Wedge": {
+        0: [
+            "Direct copy of existing solution",
+            "Minor UI improvements to existing product",
+            "No clear differentiation from incumbents"
+        ],
+        1: [
+            "Incremental improvement on existing solution",
+            "New interface but same underlying approach",
+            "Cost advantage but no technical innovation"
+        ],
+        2: [
+            "Novel technical approach to known problem",
+            "Unique go-to-market strategy in mature space",
+            "New business model that reduces friction"
+        ],
+        3: [
+            "Revolutionary technology enabling new capabilities",
+            "First to market with solution made possible by recent change",
+            "Unique insight that transforms industry economics"
+        ]
+    },
+    "Customer Signal": {
+        0: [
+            "No paying customers yet",
+            "Only friends and family using product",
+            "High churn rate with no retention"
+        ],
+        1: [
+            "Few pilot customers but no expansion",
+            "Paying customers but slow growth",
+            "Mixed customer feedback"
+        ],
+        2: [
+            "Strong retention metrics",
+            "Rapid customer acquisition in target segment",
+            "Clear evidence of product-market fit"
+        ],
+        3: [
+            "Viral adoption with negative CAC",
+            "Industry leaders as reference customers",
+            "Exceptional NPS with rapid expansion"
+        ]
+    },
+    "Sales Motion": {
+        0: [
+            "No repeatable sales process",
+            "Random deals with no pattern",
+            "No clear target customer profile"
+        ],
+        1: [
+            "Basic sales process but long cycles",
+            "Some deals but high CAC",
+            "Inconsistent win rates"
+        ],
+        2: [
+            "Efficient sales process with predictable pipeline",
+            "Strong win rates in target segment",
+            "Clear ICP with repeatable motion"
+        ],
+        3: [
+            "Viral product-led growth with negative CAC",
+            "Highly efficient enterprise sales motion",
+            "Perfect channel-market fit with rapid scaling"
+        ]
+    },
+    "Moat Potential": {
+        0: [
+            "Easily replicable solution",
+            "No proprietary technology",
+            "No network effects or switching costs"
+        ],
+        1: [
+            "Basic technical barriers",
+            "Some data advantage but not unique",
+            "Moderate switching costs"
+        ],
+        2: [
+            "Strong network effects emerging",
+            "Significant proprietary technology",
+            "High switching costs with platform lock-in"
+        ],
+        3: [
+            "Dominant network effect with winner-take-all dynamics",
+            "Revolutionary protected technology",
+            "Ecosystem lock-in with high data barriers"
+        ]
+    },
+    "Investor Behavior": {
+        0: [
+            "No institutional investors",
+            "Only friends and family funding",
+            "Unable to raise follow-on rounds"
+        ],
+        1: [
+            "Some angel investors but no leads",
+            "Small seed round from generalist investors",
+            "Struggling to raise next round"
+        ],
+        2: [
+            "Strong tier-2 VC backing",
+            "Strategic investors in space",
+            "Multiple rounds with up-rounds"
+        ],
+        3: [
+            "Top-tier VC leading all rounds",
+            "Strategic bidding war for rounds",
+            "Exceptional investor social proof"
+        ]
+    },
+    "Incumbent Blind Spot": {
+        0: [
+            "Incumbents already building similar solution",
+            "Easy for large players to copy",
+            "No structural barriers to incumbent entry"
+        ],
+        1: [
+            "Incumbents aware but slow to respond",
+            "Some organizational barriers",
+            "Limited time advantage"
+        ],
+        2: [
+            "Clear structural barriers for incumbents",
+            "Strong first-mover advantage in new category",
+            "Significant organizational conflicts"
+        ],
+        3: [
+            "Fundamental disruption incumbents cannot pursue",
+            "Perfect timing with high barriers to response",
+            "Structural inability for incumbents to compete"
+        ]
+    }
+}
+
 class BaseEvaluator:
     def __init__(self, dimension_name: str, rubric: str):
         self.dimension_name = dimension_name
@@ -90,11 +248,22 @@ class BaseEvaluator:
         web_results = self.search_web(company_data)
         self.logger.info(f"Web search completed, found {len(web_results.split())} words")
         
+        # Get calibration examples for this dimension
+        dimension_examples = CALIBRATION_EXAMPLES.get(self.dimension_name, {})
+        calibration_examples_text = ""
+        if dimension_examples:
+            calibration_examples_text = "Calibration Examples:\n"
+            for score in range(4):  # 0 to 3
+                examples = dimension_examples.get(score, [])
+                calibration_examples_text += f"\nScore {score}:\n"
+                for example in examples:
+                    calibration_examples_text += f"- {example}\n"
+
         # Create evaluation prompt
         self.logger.info("Creating evaluation prompt")
         prompt = f"""
-        You are a critical evaluator assessing {company_data.get('name')} for the {self.dimension_name} dimension, specifically analyzing its potential as a fast follower opportunity. 
-        
+        You are a critical evaluator assessing {company_data.get('name')} for the {self.dimension_name} dimension, specifically analyzing its potential as a fast follower opportunity. Assume nothing until proven.
+
         Key Hypothesis to Evaluate:
         1. The company is targeting a proven problem/market where customers will pay
         2. The space has limited incumbents (signaled by competitors being young companies)
@@ -102,11 +271,13 @@ class BaseEvaluator:
         4. Rapid growth signals strong product-market fit or investor validation
         5. The timing is right for a fast follower strategy
         
-        Scoring Guidelines:
-        - Score 0: No clear evidence of proven market or concerning red flags
-        - Score 1: Some evidence of market potential but significant risks or timing concerns
-        - Score 2: Strong evidence of proven market with reasonable entry timing
-        - Score 3: Exceptional evidence of perfect timing for fast follower strategy (should be rare)
+        Scoring Guidelines (Adversarial):
+        - 0 = No signal of edge. Founders are generalists or unrelated to domain.
+        - 1 = Background is adjacent but not clearly strategic.
+        - 2 = Domain or network relevance is evident but not unique.
+        - 3 = Rare and strategic edge (e.g., repeat founder in same vertical, ex-CxO in target buyer persona).
+        
+        {calibration_examples_text}
         
         Critical Questions to Address:
         1. Market Validation:
@@ -149,8 +320,7 @@ class BaseEvaluator:
         {self.rubric}
         
         Provide:
-        1. A score (0-3) at the start of your response
-        2. A detailed analysis that:
+        1. A detailed analysis that:
            - Evaluates market validation evidence
            - Assesses competitive dynamics
            - Analyzes growth signals
@@ -158,7 +328,7 @@ class BaseEvaluator:
            - Identifies potential risks
            - Lists critical missing information
            - Explains why a higher score wasn't given
-        3. A balanced conclusion that weighs all factors
+        2. After providing the rationale, determine the appropriate score from 0-3 using the rubric.
         """
         
         try:

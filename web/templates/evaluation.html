@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ metadata.company_name }} Evaluation{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="evaluation-header">
+        <h1>{{ metadata.company_name }}</h1>
+        <div class="metadata">
+            <p>Evaluated: {{ metadata.evaluation_date }}</p>
+            <p>Version: {{ metadata.evaluation_version }}</p>
+            <p>Evaluation Time: {{ metadata.total_evaluation_time }}</p>
+        </div>
+    </div>
+
+    <div class="overall-score">
+        <h2>Overall Score: {{ overall.score }}</h2>
+        <p>{{ overall.rationale }}</p>
+        <p>Successful Evaluations: {{ overall.successful_evaluations }} / {{ overall.total_dimensions }}</p>
+    </div>
+
+    <div class="dimensions">
+        {% for dimension, data in dimensions.items() %}
+        <div class="dimension-card">
+            <h3>{{ dimension }}</h3>
+            <div class="score">Score: {{ data.score }}</div>
+            <div class="rationale">
+                <h4>Rationale:</h4>
+                {{ data.rationale | safe }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

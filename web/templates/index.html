@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Echo Evaluator - Evaluations{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Company Evaluations</h1>
+    <div class="evaluations-list">
+        {% for evaluation in evaluations %}
+        <div class="evaluation-card">
+            <h2>{{ evaluation.company_name }}</h2>
+            <p>Evaluated: {{ evaluation.date }}</p>
+            <p>Overall Score: {{ evaluation.overall_score }}</p>
+            <a href="{{ evaluation.link }}" class="button">View Details</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

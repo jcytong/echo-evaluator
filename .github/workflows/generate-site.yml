@@ -12,6 +12,11 @@ permissions:
   pages: write
   id-token: write
 
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -20,7 +25,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
       
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -32,11 +37,45 @@ jobs:
           python -m pip install --upgrade pip
           pip install jinja2
 
+      - name: Prepare directories
+        run: |
+          echo "Creating necessary directories..."
+          mkdir -p docs/static/css
+          mkdir -p logs
+          echo "Setting permissions..."
+          chmod -R 755 docs
+          chmod -R 755 logs
+
+      - name: Check directory structure
+        run: |
+          echo "Checking directory structure..."
+          ls -la
+          echo "Checking web directory..."
+          ls -la web/
+          echo "Checking templates..."
+          ls -la web/templates/
+          echo "Checking static files..."
+          ls -la web/static/
+          echo "Checking logs directory..."
+          ls -la logs/
+          echo "Checking docs directory..."
+          ls -la docs/
+
       - name: Generate site
-        run: python web/generate_site.py
+        run: |
+          echo "Generating site..."
+          python web/generate_site.py
+          echo "Site generation completed"
+
+      - name: Verify generated site files
+        run: |
+          echo "Verifying docs directory..."
+          ls -la docs/
+          echo "Checking docs directory contents..."
+          find docs/ -type f
 
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -45,4 +84,4 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2 
+        uses: actions/deploy-pages@v4 

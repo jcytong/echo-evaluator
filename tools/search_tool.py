@@ -1,4 +1,4 @@
-from langchain.tools import SerpAPIWrapper
+from langchain_community.utilities import SerpAPIWrapper
 import os
 
 search_tool = SerpAPIWrapper(

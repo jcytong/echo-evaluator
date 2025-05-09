@@ -1,5 +1,8 @@
 openai
 langchain
+langchain-community
+langchain-openai
 serpapi
+google-search-results
 gspread
 python-dotenv

@@ -1,5 +1,8 @@
 import sys
 import json
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from .env file
+
 from runners.evaluate_company import run_evaluation
 
 if __name__ == "__main__":

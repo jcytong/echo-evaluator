@@ -93,42 +93,68 @@ class BaseEvaluator:
         # Create evaluation prompt
         self.logger.info("Creating evaluation prompt")
         prompt = f"""
-        You are a critical evaluator assessing the company for the {self.dimension_name} dimension. Your goal is to provide a balanced, thorough, and skeptical evaluation based on ALL available information.
-
+        You are a critical evaluator assessing {company_data.get('name')} for the {self.dimension_name} dimension, specifically analyzing its potential as a fast follower opportunity. 
+        
+        Key Hypothesis to Evaluate:
+        1. The company is targeting a proven problem/market where customers will pay
+        2. The space has limited incumbents (signaled by competitors being young companies)
+        3. Recent technological or market changes enable new solutions
+        4. Rapid growth signals strong product-market fit or investor validation
+        5. The timing is right for a fast follower strategy
+        
         Scoring Guidelines:
-        - Score 0: Critical information missing or significant red flags
-        - Score 1: Basic evidence present but with substantial concerns or gaps
-        - Score 2: Strong evidence but with some notable limitations or risks
-        - Score 3: Exceptional evidence with minimal concerns (should be rare)
-
+        - Score 0: No clear evidence of proven market or concerning red flags
+        - Score 1: Some evidence of market potential but significant risks or timing concerns
+        - Score 2: Strong evidence of proven market with reasonable entry timing
+        - Score 3: Exceptional evidence of perfect timing for fast follower strategy (should be rare)
+        
+        Critical Questions to Address:
+        1. Market Validation:
+           - Is there clear evidence that customers will pay for this type of solution?
+           - Are early movers showing strong growth/traction?
+           - What signals validate the market timing?
+        
+        2. Competitive Landscape:
+           - How fragmented is the current market?
+           - Are competitors also young/recently funded?
+           - What barriers exist for established players?
+        
+        3. Growth Signals:
+           - Is the headcount growth indicative of revenue growth or just funding?
+           - Does the hiring pattern suggest product-market fit?
+           - Are there signs of sustainable unit economics?
+        
+        4. Timing Analysis:
+           - Why is now the right time for this solution?
+           - What recent changes enable new approaches?
+           - Is the market mature enough but not too crowded?
+        
         Important Instructions:
-        1. Use BOTH the company data AND web research to inform your evaluation
-        2. If information is missing from company data but available in web research, use the web research
-        3. Only assign a score of 0 if critical information is unavailable from BOTH sources
-        4. Clearly indicate in your rationale which sources (company data vs web research) informed your evaluation
-        5. Be skeptical and look for potential issues or concerns
-        6. Consider both positive signals and red flags
-        7. Explicitly identify missing information that would strengthen the evaluation
-        8. Challenge assumptions and look for alternative interpretations
-        9. Your response MUST start with either "Score: X" or just the number X (where X is 0-3)
-        10. Justify why the company doesn't deserve a higher score
-        11. Consider competitive threats and market dynamics
-        12. Question the reliability and completeness of available information
-
+        1. Use BOTH company data AND web research to inform your evaluation
+        2. Be skeptical - distinguish between genuine signals and funding-driven growth
+        3. Explicitly identify missing information that would strengthen the evaluation
+        4. Challenge assumptions about market readiness and timing
+        5. Consider both technical and go-to-market risks
+        6. Your response MUST start with either "Score: X" or just the number X (where X is 0-3)
+        7. Justify why the company doesn't deserve a higher score
+        8. Question the reliability and completeness of available information
+        
         Company Data:
         {trimmed_data}
-
+        
         Web Research Results:
         {web_results}
-
+        
         Evaluation Rubric:
         {self.rubric}
-
+        
         Provide:
         1. A score (0-3) at the start of your response
         2. A detailed analysis that:
-           - Evaluates both strengths and weaknesses
-           - Questions assumptions
+           - Evaluates market validation evidence
+           - Assesses competitive dynamics
+           - Analyzes growth signals
+           - Questions timing assumptions
            - Identifies potential risks
            - Lists critical missing information
            - Explains why a higher score wasn't given

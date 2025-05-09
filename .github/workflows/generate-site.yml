@@ -66,16 +66,15 @@ jobs:
           echo "Generating site..."
           python web/generate_site.py
           echo "Site generation completed"
-
-      - name: Verify generated site files
-        run: |
-          echo "Verifying docs directory..."
+          echo "Verifying generated files..."
           ls -la docs/
-          echo "Checking docs directory contents..."
+          echo "Contents of docs directory:"
           find docs/ -type f
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        with:
+          static_site_generator: custom
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

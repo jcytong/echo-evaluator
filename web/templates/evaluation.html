@@ -15,15 +15,12 @@
 
     <div class="overall-score">
         <h2>Overall Score: {{ overall.score }}</h2>
-        <p>{{ overall.rationale }}</p>
-        <p>Successful Evaluations: {{ overall.successful_evaluations }} / {{ overall.total_dimensions }}</p>
     </div>
 
     <div class="dimensions">
         {% for dimension, data in dimensions.items() %}
         <div class="dimension-card">
             <h3>{{ dimension }}</h3>
-            <div class="score">Score: {{ data.score }}</div>
             <div class="rationale">
                 <h4>Rationale:</h4>
                 {{ data.rationale_html | safe }}

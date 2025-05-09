@@ -40,6 +40,7 @@ jobs:
       - name: Prepare directories
         run: |
           echo "Creating necessary directories..."
+          rm -rf docs
           mkdir -p docs/static/css
           mkdir -p logs
           echo "Setting permissions..."
@@ -73,8 +74,6 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        with:
-          static_site_generator: custom
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

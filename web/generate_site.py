@@ -56,6 +56,17 @@ def generate_site(logs_dir, output_dir):
     with open(os.path.join(output_dir, 'index.html'), 'w') as f:
         f.write(template.render(evaluations=index_data))
     
+    # Add dimension summaries for tooltips
+    dimension_summaries = {
+        "Founder Edge": "Assesses the founder's unique advantages, such as domain expertise, network, or execution skills, compared to others in the space.",
+        "Novel Wedge": "Evaluates how unique or timely the company's insight, product, or go-to-market angle is, and whether it leverages a new market opportunity.",
+        "Customer Signal": "Measures public evidence of real demand, such as customer growth, reviews, or retention, indicating the product solves a meaningful pain.",
+        "Sales Motion": "Looks at the efficiency and repeatability of the company's go-to-market approach, including sales model and scalability.",
+        "Moat Potential": "Assesses how defensible the business could become over time through technology, data, network effects, or switching costs.",
+        "Investor Behavior": "Reflects the quality and strategic fit of the company's investors, and their commitment to supporting future growth.",
+        "Incumbent Blind Spot": "Evaluates whether large competitors are unlikely or unable to pursue the same wedge due to structural or strategic reasons."
+    }
+    
     # Generate individual evaluation pages
     template = env.get_template('evaluation.html')
     for eval_data in evaluations:
@@ -81,7 +92,8 @@ def generate_site(logs_dir, output_dir):
             f.write(template.render(
                 metadata=metadata,
                 overall=overall,
-                dimensions=dimensions
+                dimensions=dimensions,
+                dimension_summaries=dimension_summaries
             ))
 
 if __name__ == '__main__':

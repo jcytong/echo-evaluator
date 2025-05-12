@@ -18,12 +18,26 @@
     </div>
 
     <div class="dimension-scores">
-        <h3>Dimension Scores</h3>
-        <ul>
+        <h3>
+            Dimension Scores
+            <button class="info-btn" onclick="toggleTooltip()">?</button>
+            <span id="score-tooltip" class="score-tooltip">
+                Scores are assigned by agents using a 1–3 scale based on the agent's instructions for each dimension.
+            </span>
+        </h3>
+        <div class="score-cards">
             {% for dimension, data in dimensions.items() %}
-            <li><strong>{{ dimension }}:</strong> {{ data.score }}</li>
+            <div class="score-card">
+                <span class="dimension-name">{{ dimension }}
+                    <span class="dim-info-tooltip-container">
+                        <button class="dim-info-btn">?</button>
+                        <span class="dim-tooltip">{{ dimension_summaries[dimension] }}</span>
+                    </span>
+                </span>
+                <span class="dimension-score">{{ data.score }}/3</span>
+            </div>
             {% endfor %}
-        </ul>
+        </div>
     </div>
 
     <div class="dimensions">
@@ -38,4 +52,11 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+function toggleTooltip() {
+    var tooltip = document.getElementById('score-tooltip');
+    tooltip.style.display = tooltip.style.display === 'block' ? 'none' : 'block';
+}
+</script>
 {% endblock %} 

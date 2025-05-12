@@ -17,6 +17,15 @@
         <h2>Overall Score: {{ overall.score }}</h2>
     </div>
 
+    <div class="dimension-scores">
+        <h3>Dimension Scores</h3>
+        <ul>
+            {% for dimension, data in dimensions.items() %}
+            <li><strong>{{ dimension }}:</strong> {{ data.score }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
     <div class="dimensions">
         {% for dimension, data in dimensions.items() %}
         <div class="dimension-card">

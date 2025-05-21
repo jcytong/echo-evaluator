@@ -299,7 +299,7 @@ class BaseEvaluator:
         {self.rubric}
         
         Provide:
-        1. A 2 minute analysis of the company's potential as a fast follower opportunity for the {self.dimension_name} dimension
+        1. A concise, informative analysis of the company's potential as a fast follower opportunity for the {self.dimension_name} dimension. Your rationale must be no longer than 500 words (about 2 minutes to read). Avoid repetition and unnecessary detail.
         2. After providing the rationale, determine the appropriate score from 0-3 using the rubric.
         """
         

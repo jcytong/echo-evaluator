@@ -167,7 +167,7 @@ class BaseEvaluator:
         self.dimension_name = dimension_name
         self.rubric = rubric
         self.llm = ChatOpenAI(
-            model="gpt-4-turbo-preview",
+            model="o3",
             temperature=0
         )
         self.search_tool = search_tool

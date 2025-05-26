@@ -140,7 +140,7 @@ def run_evaluation(company_data: Dict[str, Any]) -> Dict[str, Any]:
             except Exception as e:
                 logger.error(f"Error in {dimension} evaluation: {str(e)}", exc_info=True)
                 results[dimension] = {
-                    "score": 0,
+                    "score": 1,
                     "rationale": f"Error during evaluation: {str(e)}",
                     "error": str(e)
                 }
@@ -155,7 +155,7 @@ def run_evaluation(company_data: Dict[str, Any]) -> Dict[str, Any]:
             }
         else:
             results["Overall"] = {
-                "score": 0,
+                "score": 1,
                 "rationale": "No successful evaluations",
                 "successful_evaluations": 0,
                 "total_dimensions": len(evaluators)

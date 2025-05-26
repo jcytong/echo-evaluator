@@ -49,7 +49,7 @@ def generate_site(logs_dir, output_dir):
         index_data.append({
             'company_name': company_name if company_name is not None else 'Unknown Company',
             'date': data['metadata'].get('evaluation_date'),
-            'overall_score': data.get('Overall', {}).get('score', 0),
+            'overall_score': data.get('Overall', {}).get('score', 1),
             'link': eval_data['html_file']
         })
     

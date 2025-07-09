@@ -1,5 +1,5 @@
 from typing import Dict, Any, Optional, List
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from tools.search_tool import search_tool
 import logging
 import re
@@ -202,8 +202,7 @@ class BaseEvaluator:
         self.dimension_name = dimension_name
         self.rubric = rubric
         self.llm = ChatOpenAI(
-            model="o3",
-            temperature=0
+            model="gpt-4.1"
         )
         self.search_tool = search_tool
         self.logger = logging.getLogger(__name__)

@@ -116,7 +116,9 @@ def run_evaluation(company_data: Dict[str, Any]) -> Dict[str, Any]:
             "metadata": {
                 "company_name": company_data.get("name") or company_data.get("display_name") or "Unknown Company",
                 "evaluation_date": datetime.now().isoformat(),
-                "evaluation_version": "1.0"
+                "evaluation_version": "1.0",
+                "website": company_data.get("website", ""),
+                "linkedin_url": company_data.get("linkedin_url", "")
             }
         }
         total_score = 0
